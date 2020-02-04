@@ -102,7 +102,7 @@ pipeline{
     "files": [
     {
       "pattern": "company/company-0.0.1-SNAPSHOT.war",
-      "target": "/home/mtadminnuvepro/artifacts"
+      "target": "/home/mtadminnuvepro/artifacts/"
       
     }
     ]
