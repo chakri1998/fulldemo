@@ -24,7 +24,7 @@ pipeline{
                     FAILED_STAGE=env.STAGE_NAME
                     echo "Clean Old Packages"
                 }
-                           dir("/var/lib/jenkins/workspace/full_demo_chakradhar/company/")
+                           dir("company/")
 {
         sh label: 'Clean', script: 'mvn clean'
         
@@ -37,7 +37,7 @@ pipeline{
                     FAILED_STAGE=env.STAGE_NAME
                     echo "Maven Compile"
                 }
-         dir("/var/lib/jenkins/workspace/full_demo_chakradhar/company/")
+         dir("company/")
 {
         sh label: 'Compile', script: 'mvn compile'
         
@@ -50,7 +50,7 @@ pipeline{
                     FAILED_STAGE=env.STAGE_NAME
                     echo "Sonar Analysis"
                 }
-                dir("/var/lib/jenkins/workspace/full_demo_chakradhar/company/")
+                dir("company/")
 {
         withSonarQubeEnv('SonarQube'){
          sh 'mvn sonar:sonar'
@@ -81,7 +81,7 @@ pipeline{
                     FAILED_STAGE=env.STAGE_NAME
                     echo "Maven Package"
                 }
-      dir("/var/lib/jenkins/workspace/full_demo_chakradhar/company/")
+      dir("company/")
 {
     sh label: 'Testing', script: 'mvn install'
     
@@ -97,8 +97,8 @@ pipeline{
         def server= Artifactory.server 'Artifactory'
                     def uploadSpec= """{
                         "files": [{
-                        "pattern": "/var/lib/jenkins/workspace/full_demo_chakradhar/company/target/*.war",
-                        "target": "fullDemoChakradhar"}]
+                        "pattern": "company/target/*.war",
+                        "target": "company"}]
                     }"""
         server.upload(uploadSpec)
         
@@ -116,8 +116,8 @@ pipeline{
     def downloadSpec = """{
     "files": [
     {
-      "pattern": "fullDemoChakradhar/company-0.0.1-SNAPSHOT.war",
-      "target": "/home/DevOpsTeam2/chakradhar/artifactroydownload/"
+      "pattern": "company/company-0.0.1-SNAPSHOT.war",
+      "target": "/home/mtadminnuvepro/artifacts"
       
     }
     ]
@@ -132,7 +132,7 @@ pipeline{
 
 	stage('buldng image') {
       steps{
-        dir("/var/lib/jenkins/workspace/full_demo_chakradhar/company/")
+        dir("company/")
           {
         script {
             FAILED_STAGE=env.STAGE_NAME
@@ -145,7 +145,7 @@ pipeline{
     }
     stage('Assinging image to variable') {
       steps{
-   dir("/var/lib/jenkins/workspace/full_demo_chakradhar/company/")
+   dir("company/")
    {
         script {
             FAILED_STAGE=env.STAGE_NAME
@@ -193,7 +193,7 @@ pipeline{
           script{
               FAILED_STAGE=env.STAGE_NAME
                echo "deployee the image in the tomcat server"
-              sh"docker run -d -it -p 8086:8080 --name companyproject_deployed_through_pipeline_script_popat_sir_cool -v /var/lib/tomcat8/conf/tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml $registry:$BUILD_NUMBER"
+              sh"docker run -d -it -p 8085:8080 --name companyproject $registry:$BUILD_NUMBER"
               
           }
       }
